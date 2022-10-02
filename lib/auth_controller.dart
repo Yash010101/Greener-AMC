@@ -38,21 +38,69 @@ class AuthController extends GetxController {
   Future<void> registerCitizen(String email, password, String fname,
       String lname, String mob, String dob) async {
     try {
-      if (EmailValidator.validate(email)) {
-        UserCredential userCredential = await auth
-            .createUserWithEmailAndPassword(email: email, password: password);
-        Map<String, dynamic> userInfoMap = {
-          "email": email,
-          "fname": fname,
-          "lname": lname,
-          "mobile": mob,
-          "birthDate": dob,
-        };
-        DatabaseMethods()
-            .addUserInfoToDBUser(auth.currentUser!.uid, userInfoMap);
+      var number = int.parse(mob);
+      final numericRegex = RegExp(r'[0-9]');
+      if (fname != '') {
+        if (lname != '') {
+          if (mob.length == 10) {
+            if (EmailValidator.validate(email)) {
+              if ((password.length >= 8 && password.length <= 16) &&
+                  numericRegex.hasMatch(password)) {
+                UserCredential userCredential =
+                    await auth.createUserWithEmailAndPassword(
+                        email: email, password: password);
+                Map<String, dynamic> userInfoMap = {
+                  "email": email,
+                  "fname": fname,
+                  "lname": lname,
+                  "mobile": number,
+                  "birthDate": dob,
+                };
+                DatabaseMethods()
+                    .addUserInfoToDBUser(auth.currentUser!.uid, userInfoMap);
+              } else {
+                Fluttertoast.showToast(
+                    msg: "Invalid Email please try again",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0);
+              }
+            } else {
+              Fluttertoast.showToast(
+                  msg: "Invalid Mobile Number please try again",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                  fontSize: 16.0);
+            }
+          } else {
+            Fluttertoast.showToast(
+                msg: "Invalid password please try again",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0);
+          }
+        } else {
+          Fluttertoast.showToast(
+              msg: "Last name can not be null.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
       } else {
         Fluttertoast.showToast(
-            msg: "Invalid Email please try again",
+            msg: "First name can not be null.",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,
@@ -76,24 +124,71 @@ class AuthController extends GetxController {
   }
 
   Future<void> registerTeamMember(String email, password, String fname,
-      String lname, String mob, String teamID, String loc) async {
+      String lname, String mob, String teamID) async {
     try {
-      if (EmailValidator.validate(email)) {
-        UserCredential userCredential = await auth
-            .createUserWithEmailAndPassword(email: email, password: password);
-        Map<String, dynamic> userInfoMap = {
-          "email": email,
-          "fname": fname,
-          "lname": lname,
-          "mobile": mob,
-          "TeamId": teamID,
-          "Location": loc
-        };
-        DatabaseMethods()
-            .addUserInfoToDBAMC(auth.currentUser!.uid, userInfoMap);
+      var number = int.parse(mob);
+      final numericRegex = RegExp(r'[0-9]');
+      if (fname != '') {
+        if (lname != '') {
+          if ((password.length >= 8 && password.length <= 16) &&
+              numericRegex.hasMatch(password)) {
+            if (mob.length == 10) {
+              if (EmailValidator.validate(email)) {
+                UserCredential userCredential =
+                    await auth.createUserWithEmailAndPassword(
+                        email: email, password: password);
+                Map<String, dynamic> userInfoMap = {
+                  "email": email,
+                  "fname": fname,
+                  "lname": lname,
+                  "mobile": number,
+                  "TeamId": int.parse(teamID),
+                };
+                DatabaseMethods()
+                    .addUserInfoToDBAMC(auth.currentUser!.uid, userInfoMap);
+              } else {
+                Fluttertoast.showToast(
+                    msg: "Invalid password please try again",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0);
+              }
+            } else {
+              Fluttertoast.showToast(
+                  msg: "Invalid Email please try again",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                  fontSize: 16.0);
+            }
+          } else {
+            Fluttertoast.showToast(
+                msg: "Invalid Mobile number please try again",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0);
+          }
+        } else {
+          Fluttertoast.showToast(
+              msg: "Last name can not be null.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
       } else {
         Fluttertoast.showToast(
-            msg: "Invalid Email please try again",
+            msg: "First name can not be null.",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,
@@ -117,23 +212,84 @@ class AuthController extends GetxController {
   }
 
   Future<void> registerORG(String email, password, String name, String headName,
-      String mob, String yearOfEstablishment) async {
+      String mob, String yearOfEstablishment, String pincode) async {
     try {
-      if (EmailValidator.validate(email)) {
-        UserCredential userCredential = await auth
-            .createUserWithEmailAndPassword(email: email, password: password);
-        Map<String, dynamic> userInfoMap = {
-          "email": email,
-          "nameOfOrg": name,
-          "headName": headName,
-          "mobile": mob,
-          "yearOfEstablishment": yearOfEstablishment,
-        };
-        DatabaseMethods()
-            .addUserInfoToDBORG(auth.currentUser!.uid, userInfoMap);
+      var number = int.parse(mob);
+      final numericRegex = RegExp(r'[0-9]');
+      if (name != '') {
+        if (headName != '') {
+          if (pincode.length == 6) {
+            if ((password.length >= 8 && password.length <= 16) &&
+                numericRegex.hasMatch(password)) {
+              if (mob.length == 10) {
+                if (EmailValidator.validate(email)) {
+                  UserCredential userCredential =
+                      await auth.createUserWithEmailAndPassword(
+                          email: email, password: password);
+                  var pin = int.parse(pincode);
+                  Map<String, dynamic> userInfoMap = {
+                    "email": email,
+                    "nameOfOrg": name,
+                    "headName": headName,
+                    "mobile": number,
+                    "yearOfEstablishment": int.parse(yearOfEstablishment),
+                    "pincode": pin,
+                  };
+                  DatabaseMethods()
+                      .addUserInfoToDBORG(auth.currentUser!.uid, userInfoMap);
+                } else {
+                  Fluttertoast.showToast(
+                      msg: "Invalid Email please try again",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                }
+              } else {
+                Fluttertoast.showToast(
+                    msg: "Invalid Mobile Number please try again",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0);
+              }
+            } else {
+              Fluttertoast.showToast(
+                  msg: "Invalid password please try again",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                  fontSize: 16.0);
+            }
+          } else {
+            Fluttertoast.showToast(
+                msg: "Invalid pin code please try again",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0);
+          }
+        } else {
+          Fluttertoast.showToast(
+              msg: "Name of head is empty",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
       } else {
         Fluttertoast.showToast(
-            msg: "Invalid Email please try again",
+            msg: "Name of organization is empty",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,

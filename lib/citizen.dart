@@ -16,6 +16,7 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
       FirebaseFirestore.instance.collection('users').snapshots();
   String? get email => '';
   String? get password => '';
+
   bool _isVisible = false;
   bool _isPasswordEightCharacters = false;
   bool _hasPasswordOneNumber = false;
@@ -32,15 +33,15 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
     });
   }
 
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final fnameController = TextEditingController();
+  final lnameController = TextEditingController();
+  final mobileController = TextEditingController();
+  final dobController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-    final fnameController = TextEditingController();
-    final lnameController = TextEditingController();
-    final mobileController = TextEditingController();
-    final dobController = TextEditingController();
-
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -195,7 +196,7 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
                       child: TextField(
                         controller: mobileController,
                         decoration: InputDecoration(
-                            hintText: "+91",
+                            prefixText: "+91  ",
                             // prefixIcon: Icon(Icons.email, color:Colors.green),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
@@ -207,6 +208,7 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
                                     color: Colors.white, width: 1.0)),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30))),
+                        // keyboardType: TextInputType.number,
                       ),
                     ),
                     SizedBox(
@@ -296,6 +298,9 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30))),
                       ),
+                    ),
+                    SizedBox(
+                      height: 20,
                     ),
 
                     SizedBox(

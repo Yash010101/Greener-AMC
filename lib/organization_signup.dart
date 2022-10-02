@@ -17,15 +17,33 @@ class _Org_SignupState extends State<Org_Signup> {
 
   String? get email => null;
   String? get password => null;
+
+  bool _isVisible = false;
+  bool _isPasswordEightCharacters = false;
+  bool _hasPasswordOneNumber = false;
+
+  onPasswordChanged(String password) {
+    final numericRegex = RegExp(r'[0-9]');
+
+    setState(() {
+      _isPasswordEightCharacters = false;
+      if (password.length >= 8) _isPasswordEightCharacters = true;
+
+      _hasPasswordOneNumber = false;
+      if (numericRegex.hasMatch(password)) _hasPasswordOneNumber = true;
+    });
+  }
+
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final nameController = TextEditingController();
+  final headController = TextEditingController();
+  final yoeController = TextEditingController();
+  final mnoController = TextEditingController();
+  final locationController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-    final nameController = TextEditingController();
-    final headController = TextEditingController();
-    final yoeController = TextEditingController();
-    final mnoController = TextEditingController();
-
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -157,7 +175,7 @@ class _Org_SignupState extends State<Org_Signup> {
                     Row(
                       children: [
                         Text(
-                          "Contact Number:",
+                          "Mobile Number:",
                           style:
                               TextStyle(fontSize: 20, color: Colors.green[600]),
                         ),
@@ -180,7 +198,8 @@ class _Org_SignupState extends State<Org_Signup> {
                       child: TextField(
                         controller: mnoController,
                         decoration: InputDecoration(
-                            hintText: "Mobile or Telephone Number",
+                            prefixText: "+91  ",
+                            hintText: "Mobile Number",
                             // prefixIcon: Icon(Icons.email, color:Colors.green),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
@@ -192,6 +211,7 @@ class _Org_SignupState extends State<Org_Signup> {
                                     color: Colors.white, width: 1.0)),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30))),
+                        keyboardType: TextInputType.number,
                       ),
                     ),
                     SizedBox(
@@ -245,6 +265,49 @@ class _Org_SignupState extends State<Org_Signup> {
                     Row(
                       children: [
                         Text(
+                          "PINCODE:",
+                          style:
+                              TextStyle(fontSize: 20, color: Colors.green[600]),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 10,
+                                spreadRadius: 7,
+                                offset: Offset(1, 1),
+                                color: Colors.grey.withOpacity(0.2))
+                          ]),
+                      child: TextField(
+                        controller: locationController,
+                        decoration: InputDecoration(
+                            hintText: "Enter Your PINCODE.",
+                            // prefixIcon: Icon(Icons.email, color:Colors.green),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: BorderSide(
+                                    color: Colors.white, width: 1.0)),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: BorderSide(
+                                    color: Colors.white, width: 1.0)),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30))),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      children: [
+                        Text(
                           "Year of Establishment:",
                           style:
                               TextStyle(fontSize: 20, color: Colors.green[600]),
@@ -282,6 +345,9 @@ class _Org_SignupState extends State<Org_Signup> {
                                 borderRadius: BorderRadius.circular(30))),
                       ),
                     ),
+                    SizedBox(
+                      height: 20,
+                    ),
 
                     SizedBox(
                       height: 20,
@@ -311,21 +377,150 @@ class _Org_SignupState extends State<Org_Signup> {
                           ]),
                       child: TextField(
                         controller: passwordController,
-                        obscureText: true,
+                        onChanged: (password) => onPasswordChanged(password),
+                        obscureText: !_isVisible,
                         decoration: InputDecoration(
-                            hintText: "must be have at least 8 character",
-                            // prefixIcon: Icon(Icons.lock, color:Colors.green),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: BorderSide(
-                                    color: Colors.white, width: 1.0)),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: BorderSide(
-                                    color: Colors.white, width: 1.0)),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30))),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _isVisible = !_isVisible;
+                              });
+                            },
+                            icon: _isVisible
+                                ? Icon(
+                                    Icons.visibility,
+                                    color: Colors.green,
+                                  )
+                                : Icon(
+                                    Icons.visibility_off,
+                                    color: Colors.green,
+                                  ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+
+                            // borderSide: BorderSide(color: Colors.white)
+                          ),
+                          // focusedBorder: OutlineInputBorder(
+                          //     borderRadius: BorderRadius.circular(10),
+                          //     borderSide: BorderSide(color: Colors.white)),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide:
+                                  BorderSide(color: Colors.white, width: 1.0)),
+                          hintText: "Password",
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 20),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide:
+                                  BorderSide(color: Colors.white, width: 1.0)),
+                        ),
                       ),
+                    ),
+
+                    // TextField(
+                    //   onChanged: (password) => onPasswordChanged(password),
+                    //   obscureText: !_isVisible,
+                    //   decoration: InputDecoration(
+                    //     suffixIcon: IconButton(
+                    //       onPressed: () {
+                    //         setState(() {
+                    //           _isVisible = !_isVisible;
+                    //         });
+                    //       },
+                    //       icon: _isVisible
+                    //           ? Icon(
+                    //               Icons.visibility,
+                    //               color: Colors.green,
+                    //             )
+                    //           : Icon(
+                    //               Icons.visibility_off,
+                    //               color: Colors.green,
+                    //             ),
+                    //     ),
+                    //     border: OutlineInputBorder(
+                    //       borderRadius: BorderRadius.circular(10),
+                    //
+                    //       // borderSide: BorderSide(color: Colors.white)
+                    //     ),
+                    //     // focusedBorder: OutlineInputBorder(
+                    //     //     borderRadius: BorderRadius.circular(10),
+                    //     //     borderSide: BorderSide(color: Colors.white)),
+                    //     focusedBorder: OutlineInputBorder(
+                    //         borderRadius: BorderRadius.circular(20),
+                    //         borderSide:
+                    //             BorderSide(color: Colors.white, width: 1.0)),
+                    //     hintText: "Password",
+                    //     contentPadding:
+                    //         EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    //     enabledBorder: OutlineInputBorder(
+                    //         borderRadius: BorderRadius.circular(30),
+                    //         borderSide:
+                    //             BorderSide(color: Colors.white, width: 1.0)),
+                    //   ),
+                    // ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      children: [
+                        AnimatedContainer(
+                          duration: Duration(milliseconds: 500),
+                          width: 20,
+                          height: 20,
+                          decoration: BoxDecoration(
+                              color: _isPasswordEightCharacters
+                                  ? Colors.green
+                                  : Colors.transparent,
+                              border: _isPasswordEightCharacters
+                                  ? Border.all(color: Colors.transparent)
+                                  : Border.all(color: Colors.grey.shade400),
+                              borderRadius: BorderRadius.circular(50)),
+                          child: Center(
+                            child: Icon(
+                              Icons.check,
+                              color: Colors.white,
+                              size: 15,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text("Contains at least 8 characters")
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        AnimatedContainer(
+                          duration: Duration(milliseconds: 500),
+                          width: 20,
+                          height: 20,
+                          decoration: BoxDecoration(
+                              color: _hasPasswordOneNumber
+                                  ? Colors.green
+                                  : Colors.transparent,
+                              border: _hasPasswordOneNumber
+                                  ? Border.all(color: Colors.transparent)
+                                  : Border.all(color: Colors.grey.shade400),
+                              borderRadius: BorderRadius.circular(50)),
+                          child: Center(
+                            child: Icon(
+                              Icons.check,
+                              color: Colors.white,
+                              size: 15,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text("Contains at least 1 number")
+                      ],
                     ),
                     // SizedBox(height: 15,),
                     // Row(
@@ -354,7 +549,8 @@ class _Org_SignupState extends State<Org_Signup> {
                       nameController.text.trim(),
                       headController.text.trim(),
                       mnoController.text.trim(),
-                      yoeController.text.trim());
+                      yoeController.text.trim(),
+                      locationController.text.trim());
                 },
                 child: Container(
                     width: w * 0.5,
