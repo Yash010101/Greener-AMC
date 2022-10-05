@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'amc_team_signup.dart';
 import 'citizen.dart';
 import 'organization_signup.dart';
+import 'sponsor.dart';
 
 class SignUpPage extends StatelessWidget {
   // const SignUpPage({Key? key}) : super(key: key);
@@ -163,10 +164,44 @@ class SignUpPage extends StatelessWidget {
                           )),
                     ],
                   ),
-                )
+                ),
                 // SizedBox(
                 //   height: 10,
                 // ),
+                SizedBox(
+                  height: 10,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Sponsor_Signup()));
+                  },
+                  child: Row(
+                    children: [
+                      Container(
+                          width: w * 0.8,
+                          height: h * 0.08,
+                          margin: const EdgeInsets.only(left: 20, right: 20),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              image: DecorationImage(
+                                  image: AssetImage("img/g.jpg"),
+                                  fit: BoxFit.cover)),
+                          child: Center(
+                            child: Text(
+                              "Sponser",
+                              style: TextStyle(
+                                // backgroundColor: Colors.green[600],
+                                fontSize: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

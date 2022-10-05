@@ -7,7 +7,8 @@ import 'package:dbestech/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'bottomnav.dart';
+import 'sponsor_home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'citizen_home.dart';
 
@@ -28,11 +29,12 @@ class AuthController extends GetxController {
     if (user == null) {
       print("login page");
       Get.offAll(() => LoginPage());
-    } else {
-      //Get.offAll(() => WelcomePage());
-      // -> MEET: Because of welcome page is incomplete i redirected to LoginPage()
-      Get.offAll(() => LoginPage());
     }
+    // } else {
+    //   //Get.offAll(() => WelcomePage());
+    //   // -> MEET: Because of welcome page is incomplete i redirected to LoginPage()
+    //   Get.offAll(() => LoginPage());
+    // }
   }
 
   Future<void> registerCitizen(String email, password, String fname,
@@ -58,6 +60,7 @@ class AuthController extends GetxController {
                 };
                 DatabaseMethods()
                     .addUserInfoToDBUser(auth.currentUser!.uid, userInfoMap);
+                Get.offAll(() => Bottom_Nav());
               } else {
                 Fluttertoast.showToast(
                     msg: "Invalid Email please try again",
@@ -146,6 +149,7 @@ class AuthController extends GetxController {
                 };
                 DatabaseMethods()
                     .addUserInfoToDBAMC(auth.currentUser!.uid, userInfoMap);
+                Get.offAll(() => Sponsor_Home());
               } else {
                 Fluttertoast.showToast(
                     msg: "Invalid password please try again",
@@ -235,8 +239,8 @@ class AuthController extends GetxController {
                     "yearOfEstablishment": int.parse(yearOfEstablishment),
                     "pincode": pin,
                   };
-                  DatabaseMethods()
-                      .addUserInfoToDBORG(auth.currentUser!.uid, userInfoMap);
+                  DatabaseMethods().addUserInfoToDBSponsor(
+                      auth.currentUser!.uid, userInfoMap);
                 } else {
                   Fluttertoast.showToast(
                       msg: "Invalid Email please try again",
@@ -260,6 +264,126 @@ class AuthController extends GetxController {
             } else {
               Fluttertoast.showToast(
                   msg: "Invalid password please try again",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                  fontSize: 16.0);
+            }
+          } else {
+            Fluttertoast.showToast(
+                msg: "Invalid pin code please try again",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0);
+          }
+        } else {
+          Fluttertoast.showToast(
+              msg: "Name of head is empty",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+      } else {
+        Fluttertoast.showToast(
+            msg: "Name of organization is empty",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
+    } catch (e) {
+      Get.snackbar("About User", "User massage",
+          backgroundColor: Colors.redAccent,
+          snackPosition: SnackPosition.BOTTOM,
+          titleText: const Text(
+            "Account creation failed",
+            style: TextStyle(color: Colors.white),
+          ),
+          messageText: Text(
+            e.toString(),
+            style: const TextStyle(color: Colors.white),
+          ));
+    }
+  }
+
+  Future<void> registerSponsor(
+      String email,
+      password,
+      String name,
+      String headName,
+      String mob,
+      String pincode,
+      String type,
+      String gst) async {
+    try {
+      var number = int.parse(mob);
+      final numericRegex = RegExp(r'[0-9]');
+      if (name != '') {
+        if (headName != '') {
+          if (pincode.length == 6) {
+            if (gst.length == 15) {
+              if ((password.length >= 8 && password.length <= 16) &&
+                  numericRegex.hasMatch(password)) {
+                if (mob.length == 10) {
+                  if (EmailValidator.validate(email)) {
+                    UserCredential userCredential =
+                        await auth.createUserWithEmailAndPassword(
+                            email: email, password: password);
+                    var pin = int.parse(pincode);
+                    Map<String, dynamic> userInfoMap = {
+                      "email": email,
+                      "nameOfSponser": name,
+                      "headName": headName,
+                      "mobile": number,
+                      "pincode": pin,
+                      "typeOfProducts": type,
+                      "GST": gst
+                    };
+                    DatabaseMethods().addUserInfoToDBSponsor(
+                        auth.currentUser!.uid, userInfoMap);
+                  } else {
+                    Fluttertoast.showToast(
+                        msg: "Invalid Email please try again",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  }
+                } else {
+                  Fluttertoast.showToast(
+                      msg: "Invalid Mobile Number please try again",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                }
+              } else {
+                Fluttertoast.showToast(
+                    msg: "Invalid password please try again",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0);
+              }
+            } else {
+              Fluttertoast.showToast(
+                  msg: "Invalid GST number please try again",
                   toastLength: Toast.LENGTH_SHORT,
                   gravity: ToastGravity.CENTER,
                   timeInSecForIosWeb: 1,

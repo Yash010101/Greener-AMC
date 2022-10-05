@@ -1,12 +1,12 @@
 import 'package:dbestech/auth_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:dbestech/signup_page.dart';
 import 'package:flutter/material.dart';
-import 'package:dbestech/welcome.dart';
-import 'login_page.dart';
-import 'citizen.dart';
 import 'package:get/get.dart';
-import 'package:get/get.dart';
+import 'scanner.dart';
+import 'abouttree.dart';
+import 'plant.dart';
+import 'bottomnav.dart';
+import 'homepage.dart';
 
 // Importent note:
 // Log out button baki che atle video ma 38 min thi jovu
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 primarySwatch: Colors.blue,
               ),
-              home: LoginPage());
+              home: Bottom_Nav());
         }
         return CircularProgressIndicator();
       },

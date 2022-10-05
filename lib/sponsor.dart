@@ -1,19 +1,30 @@
-import 'package:dbestech/auth_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:dbestech/auth_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Citizen_Signup extends StatefulWidget {
-  const Citizen_Signup({Key? key}) : super(key: key);
+class Sponsor_Signup extends StatefulWidget {
+  const Sponsor_Signup({Key? key}) : super(key: key);
 
   @override
-  State<Citizen_Signup> createState() => _Citizen_SignupState();
+  State<Sponsor_Signup> createState() => _Sponsor_SignupState();
 }
 
-class _Citizen_SignupState extends State<Citizen_Signup> {
-  final Stream<QuerySnapshot> citizenStream =
-      FirebaseFirestore.instance.collection('users').snapshots();
+String valueChoose = list.first;
+const List<String> list = <String>[
+  'Clothing',
+  'Jewellery',
+  'Food and Drinks',
+  'Services',
+  'Cosmetics',
+  'Education',
+  'Others'
+];
+
+class _Sponsor_SignupState extends State<Sponsor_Signup> {
+  final Stream<QuerySnapshot> sponsorStream =
+      FirebaseFirestore.instance.collection('sponsor').snapshots();
   String? get email => '';
   String? get password => '';
 
@@ -35,11 +46,11 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final fnameController = TextEditingController();
-  final lnameController = TextEditingController();
+  final nameController = TextEditingController();
+  final headNameController = TextEditingController();
   final mobileController = TextEditingController();
-  final dobController = TextEditingController();
-
+  final gstController = TextEditingController();
+  final pinController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
@@ -75,7 +86,7 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Sign up for Citizen",
+                      "Sign up for Sponsor",
                       style: TextStyle(
                           fontSize: 25,
                           color: Colors.green[600],
@@ -87,7 +98,7 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
                     Row(
                       children: [
                         Text(
-                          "First Name:",
+                          "Name of Company:",
                           style:
                               TextStyle(fontSize: 20, color: Colors.green[600]),
                         ),
@@ -108,9 +119,9 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
                                 color: Colors.grey.withOpacity(0.2))
                           ]),
                       child: TextField(
-                        controller: fnameController,
+                        controller: nameController,
                         decoration: InputDecoration(
-                            hintText: "Enter Your First Name",
+                            hintText: "Enter Your Company",
                             // prefixIcon: Icon(Icons.nam, color:Colors.green),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
@@ -130,7 +141,7 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
                     Row(
                       children: [
                         Text(
-                          "Last Name:",
+                          "Name of Head:",
                           style:
                               TextStyle(fontSize: 20, color: Colors.green[600]),
                         ),
@@ -151,9 +162,9 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
                                 color: Colors.grey.withOpacity(0.2))
                           ]),
                       child: TextField(
-                        controller: lnameController,
+                        controller: headNameController,
                         decoration: InputDecoration(
-                            hintText: "Enter Your Last Name",
+                            hintText: "Enter Name of Head",
                             // prefixIcon: Icon(Icons.email, color:Colors.green),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
@@ -173,7 +184,7 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
                     Row(
                       children: [
                         Text(
-                          "Mobile Number:",
+                          "GST Number:",
                           style:
                               TextStyle(fontSize: 20, color: Colors.green[600]),
                         ),
@@ -194,9 +205,9 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
                                 color: Colors.grey.withOpacity(0.2))
                           ]),
                       child: TextField(
-                        controller: mobileController,
+                        controller: gstController,
                         decoration: InputDecoration(
-                            prefixText: "+91  ",
+                            hintText: "**",
                             // prefixIcon: Icon(Icons.email, color:Colors.green),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
@@ -208,7 +219,6 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
                                     color: Colors.white, width: 1.0)),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30))),
-                        // keyboardType: TextInputType.number,
                       ),
                     ),
                     SizedBox(
@@ -217,7 +227,7 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
                     Row(
                       children: [
                         Text(
-                          "E-mail:",
+                          "E-mail ID:",
                           style:
                               TextStyle(fontSize: 20, color: Colors.green[600]),
                         ),
@@ -252,8 +262,6 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
                                     color: Colors.white, width: 1.0)),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30))),
-                        keyboardType: TextInputType.emailAddress,
-                        autofillHints: [AutofillHints.email],
                       ),
                     ),
                     SizedBox(
@@ -262,7 +270,7 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
                     Row(
                       children: [
                         Text(
-                          "Birth Date:",
+                          "Mobile No.:",
                           style:
                               TextStyle(fontSize: 20, color: Colors.green[600]),
                         ),
@@ -283,9 +291,9 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
                                 color: Colors.grey.withOpacity(0.2))
                           ]),
                       child: TextField(
-                        controller: dobController,
+                        controller: mobileController,
                         decoration: InputDecoration(
-                            hintText: "dd/mm/yyyy",
+                            prefixText: "+91  ",
                             // prefixIcon: Icon(Icons.email, color:Colors.green),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
@@ -299,10 +307,115 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
                                 borderRadius: BorderRadius.circular(30))),
                       ),
                     ),
+
                     SizedBox(
                       height: 20,
                     ),
+                    Row(
+                      children: [
+                        Text(
+                          "PinCode:",
+                          style:
+                              TextStyle(fontSize: 20, color: Colors.green[600]),
+                        ),
+                      ],
+                    ),
 
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 10,
+                                spreadRadius: 7,
+                                offset: Offset(1, 1),
+                                color: Colors.grey.withOpacity(0.2))
+                          ]),
+                      child: TextField(
+                        controller: pinController,
+                        decoration: InputDecoration(
+                            hintText: "PINCODE",
+                            // prefixIcon: Icon(Icons.lock, color:Colors.green),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: BorderSide(
+                                    color: Colors.white, width: 1.0)),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: BorderSide(
+                                    color: Colors.white, width: 1.0)),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30))),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "Category of  productos :",
+                          style:
+                              TextStyle(fontSize: 20, color: Colors.green[600]),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 10,
+                                spreadRadius: 7,
+                                offset: Offset(1, 1),
+                                color: Colors.grey.withOpacity(0.2))
+                          ]),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          // margin: const EdgeInsets.only(left: 20, right: 20),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 10,
+                                    spreadRadius: 7,
+                                    offset: Offset(1, 1),
+                                    color: Colors.white.withOpacity(0.2))
+                              ]),
+                          child: DropdownButton<String>(
+                            hint: Text('Select Item'),
+                            value: valueChoose,
+                            dropdownColor: Colors.green[300],
+                            icon: Icon(Icons.arrow_drop_down),
+                            iconSize: 36,
+                            isExpanded: true,
+                            style: TextStyle(color: Colors.black, fontSize: 18),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                valueChoose = newValue.toString();
+                              });
+                            },
+                            items: list.map<DropdownMenuItem<String>>(
+                                (String valueItem) {
+                              return DropdownMenuItem<String>(
+                                value: valueItem,
+                                child: Text(valueItem),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ),
                     SizedBox(
                       height: 20,
                     ),
@@ -372,48 +485,6 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
                         ),
                       ),
                     ),
-
-                    // TextField(
-                    //   onChanged: (password) => onPasswordChanged(password),
-                    //   obscureText: !_isVisible,
-                    //   decoration: InputDecoration(
-                    //     suffixIcon: IconButton(
-                    //       onPressed: () {
-                    //         setState(() {
-                    //           _isVisible = !_isVisible;
-                    //         });
-                    //       },
-                    //       icon: _isVisible
-                    //           ? Icon(
-                    //               Icons.visibility,
-                    //               color: Colors.green,
-                    //             )
-                    //           : Icon(
-                    //               Icons.visibility_off,
-                    //               color: Colors.green,
-                    //             ),
-                    //     ),
-                    //     border: OutlineInputBorder(
-                    //       borderRadius: BorderRadius.circular(10),
-                    //
-                    //       // borderSide: BorderSide(color: Colors.white)
-                    //     ),
-                    //     // focusedBorder: OutlineInputBorder(
-                    //     //     borderRadius: BorderRadius.circular(10),
-                    //     //     borderSide: BorderSide(color: Colors.white)),
-                    //     focusedBorder: OutlineInputBorder(
-                    //         borderRadius: BorderRadius.circular(20),
-                    //         borderSide:
-                    //             BorderSide(color: Colors.white, width: 1.0)),
-                    //     hintText: "Password",
-                    //     contentPadding:
-                    //         EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                    //     enabledBorder: OutlineInputBorder(
-                    //         borderRadius: BorderRadius.circular(30),
-                    //         borderSide:
-                    //             BorderSide(color: Colors.white, width: 1.0)),
-                    //   ),
-                    // ),
                     SizedBox(
                       height: 30,
                     ),
@@ -476,6 +547,7 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
                         Text("Contains at least 1 number")
                       ],
                     ),
+
                     // SizedBox(height: 15,),
                     // Row(
                     //   children: [
@@ -492,25 +564,28 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
                   ],
                 ),
               ),
+
               SizedBox(
                 height: 30,
               ),
               GestureDetector(
                 onTap: () {
-                  AuthController.instance.registerCitizen(
+                  AuthController.instance.registerSponsor(
                       emailController.text.trim(),
                       passwordController.text.trim(),
-                      fnameController.text.trim(),
-                      lnameController.text.trim(),
+                      nameController.text.trim(),
+                      headNameController.text.trim(),
                       mobileController.text.trim(),
-                      dobController.text.trim());
+                      pinController.text.trim(),
+                      valueChoose.trim(),
+                      gstController.text.trim());
                 },
                 child: Container(
                     width: w * 0.5,
                     height: h * 0.08,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        image: const DecorationImage(
+                        image: DecorationImage(
                             image: AssetImage("img/g.jpg"), fit: BoxFit.cover)),
                     child: Center(
                       child: Text(
@@ -527,24 +602,9 @@ class _Citizen_SignupState extends State<Citizen_Signup> {
               SizedBox(
                 height: 20,
               ),
-              // SizedBox(height: w*0.35),
-              // RichText(text: TextSpan(
-              //     text: "Don\`t Have an Account? ",
-              //     style: TextStyle(
-              //         color: Colors.green[600],
-              //         fontSize: 20
-              //     ),
-              //     children: [
-              //       TextSpan(
-              //           text: "Create",
-              //           style: TextStyle(
-              //               color: Colors.green[700],
-              //               fontSize: 20,
-              //               fontWeight: FontWeight.bold
-              //           )
-              //       )
-              //     ]
-              // ))
+              SizedBox(
+                height: 50,
+              ),
             ],
           ),
         ));

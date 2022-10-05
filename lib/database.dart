@@ -42,4 +42,16 @@ class DatabaseMethods {
         .doc(userId)
         .get();
   }
+
+  Future addUserInfoToDBSponsor(
+      String userId, Map<String, dynamic> userInfoMap) {
+    return FirebaseFirestore.instance
+        .collection("sponsor")
+        .doc(userId)
+        .set(userInfoMap);
+  }
+
+  Future<DocumentSnapshot> getUserFromDBSponsor(String userId) async {
+    return FirebaseFirestore.instance.collection('sponsor').doc(userId).get();
+  }
 }
